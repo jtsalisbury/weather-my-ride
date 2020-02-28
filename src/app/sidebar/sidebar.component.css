@@ -1,0 +1,24 @@
+.card {
+  padding: 0;
+  top: 12px;
+  margin-left: 12px;
+  width: 300px;
+  position: absolute;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  box-sizing: border-box;
+  border-bottom: solid 1px rgba(0,0,0,0.12);
+  color: rgba(0,0,0,0.6);
+}
+.header .title {
+    margin-right: auto;
+    font-weight: 400;
+  }
+
+.content {
+  height: 400px;
+}
