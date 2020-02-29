@@ -43,3 +43,5 @@ yarn-error.log
 .notes.md
 baseline.json
 src/environments/environment.ts
+.env
+src/environments/environment.prod.ts
