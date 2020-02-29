@@ -2,11 +2,13 @@ const fs = require("fs");
 require('dotenv').config();
 
 let apiURL = process.env.googleApiKey;
-const targetPath = `./src/environments/environment.prod.ts`;
+let production = process.env.PRODUCTION;
+
+const targetPath = `./src/environments/environment${production == 'true' ? ".prod" : ""}.ts`;
+
 const envConfigFile = `
 export const environment = { 
-    production: true,
-    testThing: true, 
+    production: ${production},
     googleApiKey: '${apiURL}'
 };`
 
