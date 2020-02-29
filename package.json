@@ -8,8 +8,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "config": "node ./src/config-env.js",
-    "start": "npm run config -- && ng serve",
-    "heroku-postbuild": "npm run config -- && ng build --prod=true"
+    "start": "npm run config -- && ng serve ",
+    "heroku-postbuild": "npm run config -- && ng build",
+    "start-deployed": "npm run config -- && ng serve --prod=true"
   },
   "private": true,
   "dependencies": {
