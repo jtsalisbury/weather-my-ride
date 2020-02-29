@@ -9,7 +9,7 @@
     "e2e": "ng e2e",
     "config": "node ./src/config-env.js",
     "start": "npm run config -- && ng serve ",
-    "heroku-postbuild": "npm run config -- && ng build",
+    "heroku-postbuild": "npm run config -- && ng build"
   },
   "private": true,
   "dependencies": {
