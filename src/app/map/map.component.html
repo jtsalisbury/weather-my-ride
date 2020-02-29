@@ -1,4 +1,4 @@
 <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mapType'>
-    <agm-direction [origin]="origin" [destination]="destination" [waypoints]="waypoints">
+    <agm-direction [origin]="origin" [destination]="destination" [waypoints]="waypoints" (onResponse)="onResponse($event)">
     </agm-direction>
 </agm-map>

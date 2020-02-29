@@ -1,5 +1,6 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import PlaceResult = google.maps.places.PlaceResult;
+import { WeatherService } from '../weather.service';
 
 @Component({
   selector: 'app-map',
@@ -13,10 +14,18 @@ export class MapComponent implements OnInit {
   longitude = -122.447;
   mapType = 'roadmap';
 
-  constructor() { }
+  constructor(private weatherService: WeatherService) {}
 
   ngOnInit() {
     this.setCurrentPosition();
+  }
+
+  onResponse(event) {
+    let routes = event.routes;
+    let steps = event.routes[0].legs[0].steps;
+
+    this.weatherService.setDirections(event)
+    console.log(event);
   }
 
   public origin: any;

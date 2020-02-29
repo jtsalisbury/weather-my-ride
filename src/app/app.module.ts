@@ -16,17 +16,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AddressComponent } from './address/address.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
     MapComponent,
-    AddressComponent
+    AddressComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +44,8 @@ import { AddressComponent } from './address/address.component';
     MatButtonModule,
     MatInputModule,
     MatListModule,
-    DragDropModule
+    DragDropModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

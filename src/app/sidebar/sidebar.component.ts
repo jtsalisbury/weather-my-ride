@@ -1,6 +1,9 @@
 import { Component,  OnInit, EventEmitter, Output } from '@angular/core';
 import PlaceResult = google.maps.places.PlaceResult;
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { WeatherService } from '../weather.service';
+import { Subscription }   from 'rxjs';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -9,11 +12,17 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class SidebarComponent implements OnInit {
   @Output() locationsChanged = new EventEmitter<Array<PlaceResult>>();
+  subscription: Subscription;
 
   ngOnInit(): void {
 
   }
-  constructor() {
+  constructor(private weatherService: WeatherService) {
+    this.subscription = weatherService.weatherReceived$.subscribe(
+      weatherData => {
+        console.log(weatherData);
+      }
+    )
   }
 
   private count = 2;

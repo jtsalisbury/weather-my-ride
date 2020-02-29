@@ -1,7 +1,6 @@
 /// <reference types="@types/googlemaps" />
 
 import { Component, EventEmitter, OnInit, ViewEncapsulation, Output } from '@angular/core';
-import { Location } from '@angular-material-extensions/google-maps-autocomplete';
 import PlaceResult = google.maps.places.PlaceResult;
 
 @Component({
