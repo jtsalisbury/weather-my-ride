@@ -1,12 +1,19 @@
-const express = require('express')
-const app = express()
+//Install express server
+const express = require('express');
+const path = require('path');
 
-app.set('view engine', 'ejs')
+const app = express();
 
-app.get('/', function (req, res) {
-    res.render('index');
-})
+// Serve only the static files form the dist directory
+app.use(express.static(__dirname + '/dist/weather-my-route'));
 
-app.listen(3000, function () {
-  console.log('Listening on port 3000!')
-})
+app.get('/*', function(req,res) {
+
+res.sendFile(path.join(__dirname+'/dist/weather-my-route/index.html'));
+});
+
+// Start the app by listening on the default Heroku port
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log('Express server listening on port', port)
+});
