@@ -1,1 +1,4 @@
-<agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mapType'></agm-map>
+<agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mapType'>
+    <agm-direction [origin]="origin" [destination]="destination" [waypoints]="waypoints">
+    </agm-direction>
+</agm-map>

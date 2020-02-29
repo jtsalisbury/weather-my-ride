@@ -1,4 +1,4 @@
-<app-map></app-map>
-<app-sidebar></app-sidebar>
+<app-map [locations]="locations"></app-map>
+<app-sidebar (locationsChanged)="onLocationsChanged($event)"></app-sidebar>
 
 <router-outlet></router-outlet>
