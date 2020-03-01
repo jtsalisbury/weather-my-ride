@@ -15,8 +15,6 @@ export class AppComponent {
 
   locations = [];
   onLocationsChanged(result: Array<PlaceResult>) {
-    result.forEach(location => this.weatherService.getWeather(location));
-
     this.locations = Object.assign({}, result);
   }
 }

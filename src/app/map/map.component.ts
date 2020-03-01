@@ -20,18 +20,16 @@ export class MapComponent implements OnInit {
     this.setCurrentPosition();
   }
 
+  // Once the directions have been received, have our weatherservice update
   onResponse(event) {
-    let routes = event.routes;
-    let steps = event.routes[0].legs[0].steps;
-
     this.weatherService.setDirections(event)
-    console.log(event);
   }
 
   public origin: any;
   public destination: any;
   public waypoints: Array<Object>;
 
+  // Once the locations change
   ngOnChanges(changes: SimpleChanges) {
     let locs = changes.locations.currentValue;
     let len = Object.keys(locs).length;
@@ -43,7 +41,8 @@ export class MapComponent implements OnInit {
       
       return;
     }
-  
+    
+    // Setup the origin and destinations
     this.origin = { 
       lat: locs[0].geometry.location.lat(),
       lng: locs[0].geometry.location.lng()
@@ -53,25 +52,25 @@ export class MapComponent implements OnInit {
       lng: locs[len - 1].geometry.location.lng()
     }
 
+    // Anything else should be a waypoint in between 
     this.waypoints = [];
     if (len > 2) {
       let arr = [];
 
       for (let i = 1; i <= len - 2; i++) {
-        arr.push(
-          { 
-            location: {
-              lat: locs[i].geometry.location.lat(),
-              lng: locs[i].geometry.location.lng()
-            }
+        arr.push({ 
+          location: {
+            lat: locs[i].geometry.location.lat(),
+            lng: locs[i].geometry.location.lng()
           }
-        );
+        });
       }
 
       this.waypoints = arr;
     }
   }
 
+  // Setup the current position to be our location
   private setCurrentPosition() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
