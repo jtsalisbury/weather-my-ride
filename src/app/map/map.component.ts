@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import PlaceResult = google.maps.places.PlaceResult;
 import { WeatherService } from '../weather.service';
+import { Subscription } from 'rxjs';
+import { LocationsService } from '../locations.service';
 
 @Component({
   selector: 'app-map',
@@ -9,12 +11,28 @@ import { WeatherService } from '../weather.service';
 })
 export class MapComponent implements OnInit {
   @Input() locations: Array<PlaceResult>;
+  weatherSubscription: Subscription;
+  waypointSubscription: Subscription;
 
   latitude = 37.77;
   longitude = -122.447;
   mapType = 'roadmap';
 
-  constructor(private weatherService: WeatherService) {}
+  constructor(private weatherService: WeatherService, private locationService: LocationsService) {  
+    // Listen for weather data to add markers
+    this.weatherSubscription = weatherService.weatherReceived$.subscribe(
+      weatherData => {
+        this.setMarkers(weatherData);
+      }
+    )
+
+    // Listen for location changes to update our waypoints/origin/destination
+    this.waypointSubscription = locationService.waypointsChanged$.subscribe(
+      waypoints => {
+        this.updateLocations(waypoints);
+      }
+    )
+  }
 
   ngOnInit() {
     this.setCurrentPosition();
@@ -25,15 +43,51 @@ export class MapComponent implements OnInit {
     this.weatherService.setDirections(event)
   }
 
+  // Hide default markers
+  public renderOptions = {
+    suppressMarkers: true
+  }
+
   public origin: any;
   public destination: any;
   public waypoints: Array<Object>;
+  public markers: Array<Object> = [];
+
+  // Dynamically add markers 
+  setMarkers(weatherData) {
+    this.markers = [];
+
+    let legs = weatherData.routes[0].legs;
+
+    // Legs will have a start and end location. End location may be the start location of a next leg
+    // Always add the first entry
+    this.markers.push({
+      lat: legs[0].start_location.lat(),
+      lng: legs[0].start_location.lng()
+    });
+
+    for (let i = 0; i < legs.length; i++) {     
+      // Make sure we add the end location's weather data for each leg
+      this.markers.push({
+        lat: legs[i].end_location.lat(),
+        lng: legs[i].end_location.lng(),
+        icn: {
+          url: legs[i].weatherData.currently.iconURL,
+          scaledSize: {
+            width: 32,
+            height: 32
+          }
+        }
+      });
+      
+    }
+  }
 
   // Once the locations change
-  ngOnChanges(changes: SimpleChanges) {
-    let locs = changes.locations.currentValue;
+  updateLocations(locs) {
     let len = Object.keys(locs).length;
 
+    // No locations
     if (len == 0) {
       this.origin = null;
       this.destination = null;
@@ -42,7 +96,7 @@ export class MapComponent implements OnInit {
       return;
     }
     
-    // Setup the origin and destinations
+    // Setup the origin and destinations (0th and length -1, respectively)
     this.origin = { 
       lat: locs[0].geometry.location.lat(),
       lng: locs[0].geometry.location.lng()

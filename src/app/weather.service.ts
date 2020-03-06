@@ -43,6 +43,10 @@ export class WeatherService {
       result.then(weatherData => {
         // Add the weather data to the directions info
         directions.routes[0].legs[i].weatherData = weatherData;
+
+        // Get the URL corresponding to the icon
+        let iconURL = this.getIconURL(directions.routes[0].legs[i].weatherData.currently.icon);
+        directions.routes[0].legs[i].weatherData.currently.iconURL = iconURL;
       })
 
       results.push(result);
@@ -52,5 +56,9 @@ export class WeatherService {
     Promise.all(results).then(() => {
       this.weatherSource.next(directions);
     });
+  }
+
+  getIconURL(icon) {
+    return "assets/img/weather/" + icon + ".svg";
   }
 }

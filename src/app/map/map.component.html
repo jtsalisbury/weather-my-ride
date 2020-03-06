@@ -1,4 +1,12 @@
 <agm-map [latitude]='latitude' [longitude]='longitude' [mapTypeId]='mapType'>
-    <agm-direction [origin]="origin" [destination]="destination" [waypoints]="waypoints" (onResponse)="onResponse($event)">
+    <agm-direction 
+        [origin]="origin" 
+        [destination]="destination" 
+        [waypoints]="waypoints" 
+        [renderOptions]="renderOptions"
+        (onResponse)="onResponse($event)">
     </agm-direction>
+    <agm-marker *ngFor="let i of markers"
+      [latitude]="i.lat" [longitude]="i.lng" [iconUrl]="i.icn">
+    </agm-marker>
 </agm-map>

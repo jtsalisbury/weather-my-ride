@@ -1,7 +1,8 @@
 /// <reference types="@types/googlemaps" />
 
-import { Component, EventEmitter, OnInit, ViewEncapsulation, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewEncapsulation, Output, Input } from '@angular/core';
 import PlaceResult = google.maps.places.PlaceResult;
+import { LocationsService } from '../locations.service';
 
 @Component({
   selector: 'app-address',
@@ -11,18 +12,19 @@ import PlaceResult = google.maps.places.PlaceResult;
 })
 
 export class AddressComponent implements OnInit {
-  
-  constructor(
+  @Input() entryid;
 
-  ) {}
+  locationService: LocationsService;
+  
+  constructor(locationService: LocationsService) {
+    this.locationService = locationService;
+  }
   
   ngOnInit() {
 
   }
 
-  @Output() addressSelected = new EventEmitter<PlaceResult>();
-
   onAutocompleteSelected(result: PlaceResult) {
-    this.addressSelected.emit(result);
+    this.locationService.updateLocation(this.entryid, result);
   }
 }

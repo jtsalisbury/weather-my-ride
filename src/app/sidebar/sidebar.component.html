@@ -3,7 +3,7 @@
     
     <div class="address-list" cdkDropList (cdkDropListDropped)="drop($event)">
       <div cdkDrag class="address-box" *ngFor="let entry of addressEntries; trackBy: trackEntries" style="height: 81px">
-        <app-address (addressSelected)="onAddressSelected($event, entry.id)"></app-address>
+        <app-address [entryid]="entry.id"></app-address>
         <button *ngIf="addressEntries.length > 2" (click)="removeLocationEntry(entry.id)" mat-icon-button>
           <mat-icon>clear</mat-icon>
         </button>

@@ -2,6 +2,8 @@ import { Component,  OnInit, EventEmitter, Output } from '@angular/core';
 import PlaceResult = google.maps.places.PlaceResult;
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { WeatherService } from '../weather.service';
+import { LocationsService } from '../locations.service';
+
 import { Subscription }   from 'rxjs';
 
 
@@ -11,69 +13,55 @@ import { Subscription }   from 'rxjs';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  @Output() locationsChanged = new EventEmitter<Array<PlaceResult>>();
-  subscription: Subscription;
+  weatherSubscription: Subscription;
+  locationSubscription: Subscription;
+
+  locationService: LocationsService;
 
   ngOnInit(): void {
 
   }
-  constructor(private weatherService: WeatherService) {
-    this.subscription = weatherService.weatherReceived$.subscribe(
+
+  // Wait for weather data to be received
+  constructor(private weatherService: WeatherService, locationService: LocationsService) {
+    this.locationService = locationService;
+    
+    this.weatherSubscription = weatherService.weatherReceived$.subscribe(
       weatherData => {
         console.log(weatherData);
       }
     )
+
+    // Listen for changes to how many address sources we have
+    this.locationSubscription = locationService.locationsChanged$.subscribe(
+      locations => {
+        this.addressEntries = locations;
+      }
+    )
+
+    this.addressEntries = this.locationService.getSources();
   }
 
-  private count = 2;
-  public addressEntries = [
-    {id: 1, val: {}},
-    {id: 2, val: {}}
-  ];
-
-  onAddressSelected(result: PlaceResult, id) {
-    this.addressEntries[this.addressEntries.findIndex(entry => entry.id == id)].val = result;
-
-    this.updateLocations();
-  }
+  // Must always have two (origin & destination) but all others are stored here too
+  public addressEntries = [];
 
   trackEntries(_, entry) {
     return entry ? entry.id : undefined;
   }
 
+  // The drop event for drag & drop
   drop(event: CdkDragDrop<Object>) {
-    moveItemInArray(this.addressEntries, event.previousIndex, event.currentIndex);
-    
-    this.updateLocations();
+    this.locationService.changeLocationPosition(event.previousIndex, event.currentIndex);
   }
 
-  updateLocations() {
-    let locations = [];
-    this.addressEntries.forEach(entry => {
-      if (Object.entries(entry.val).length !== 0) {
-        locations.push(entry.val);
-      }
-    });
-
-    if (locations.length !== this.addressEntries.length) {
-      return;
-    }
-
-    this.locationsChanged.emit(locations);
-  }
-
-  removeLocationEntry(id) {
-    this.addressEntries.splice(this.addressEntries.findIndex(entry => entry.id == id), 1);
-
-    this.updateLocations();
-  }
-
+  // Add a location to the location service
   addLocationEntry() {
-    if (this.addressEntries.length + 1 > 20) {
-      return;
-    }
-
-    this.count++;
-    this.addressEntries.push({id: this.count, val: {}});
+    this.locationService.addLocationSource();
   }
+
+  // Remove a location from the location service
+  removeLocationEntry(id) {
+    this.locationService.removeLocationSource(id);
+  }
+
 }
