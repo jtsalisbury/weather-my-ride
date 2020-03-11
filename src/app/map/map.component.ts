@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import PlaceResult = google.maps.places.PlaceResult;
 import { WeatherService } from '../weather.service';
 import { Subscription } from 'rxjs';
@@ -18,17 +18,19 @@ export class MapComponent implements OnInit {
   longitude = -122.447;
   mapType = 'roadmap';
 
-  constructor(private weatherService: WeatherService, private locationService: LocationsService) {  
+  constructor(private weatherService: WeatherService, private locationService: LocationsService, private ngZone: NgZone) {  
     // Listen for weather data to add markers
     this.weatherSubscription = weatherService.weatherReceived$.subscribe(
       weatherData => {
         this.setMarkers(weatherData);
+        this.setWeatherLoading(false);
       }
     )
 
     // Listen for location changes to update our waypoints/origin/destination
     this.waypointSubscription = locationService.waypointsChanged$.subscribe(
       waypoints => {
+        this.setWeatherLoading(true);
         this.updateLocations(waypoints);
       }
     )
@@ -52,6 +54,13 @@ export class MapComponent implements OnInit {
   public destination: any;
   public waypoints: Array<Object>;
   public markers: Array<Object> = [];
+  public isLoading = false;
+
+  setWeatherLoading(newLoadingState) {
+    this.ngZone.run(() => {
+      this.isLoading = newLoadingState;
+    });
+  }
 
   // Dynamically add markers 
   setMarkers(weatherData) {

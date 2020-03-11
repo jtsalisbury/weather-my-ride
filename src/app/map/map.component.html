@@ -10,3 +10,10 @@
       [latitude]="i.lat" [longitude]="i.lng" [iconUrl]="i.icn">
     </agm-marker>
 </agm-map>
+
+<div id="weatherLoading" *ngIf="isLoading">
+    <mat-progress-spinner 
+        class="progress" 
+        mode="indeterminate">
+    </mat-progress-spinner>
+</div>
