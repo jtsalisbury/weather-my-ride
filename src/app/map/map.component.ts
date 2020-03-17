@@ -70,17 +70,26 @@ export class MapComponent implements OnInit {
     });
   }
 
+  getTimeString(timestamp, timezone) {
+    let d = new Date(timestamp * 1000).toLocaleString("en-US", {timeZone: timezone});
+
+    return d;
+  }
+
   // Dynamically add markers 
-  setMarkers(weatherData) {
+  setMarkers(routeData) {
     this.markers = [];
 
-    let legs = weatherData.routes[0].legs;
+    let legs = routeData.routes[0].legs;
 
     // Legs will have a start and end location. End location may be the start location of a next leg
     // Always add the first entry
     this.markers.push({
       lat: legs[0].start_location.lat(),
-      lng: legs[0].start_location.lng()
+      lng: legs[0].start_location.lng(),
+      infoTitle: legs[0].start_address,
+      infoTime: this.getTimeString(legs[0].departure_weather.currently.time, legs[0].departure_weather.timezone),
+      infoConditions: legs[0].departure_weather.currently.summary
     });
 
     for (let i = 0; i < legs.length; i++) {     
@@ -89,12 +98,15 @@ export class MapComponent implements OnInit {
         lat: legs[i].end_location.lat(),
         lng: legs[i].end_location.lng(),
         icn: {
-          url: legs[i].weatherData.currently.iconURL,
+          url: legs[i].destination_weather.currently.iconURL,
           scaledSize: {
             width: 32,
             height: 32
           }
-        }
+        },
+        infoTitle: legs[i].end_address,
+        infoTime: this.getTimeString(legs[i].destination_weather.currently.time, legs[i].destination_weather.timezone),
+        infoConditions: legs[i].destination_weather.currently.summary
       });
       
     }
@@ -124,7 +136,8 @@ export class MapComponent implements OnInit {
     }
     this.destination = { 
       lat: locs[len - 1].geometry.location.lat(),
-      lng: locs[len - 1].geometry.location.lng()
+      lng: locs[len - 1].geometry.location.lng(),
+      infoWindow: 'test content'
     }
 
     // Anything else should be a waypoint in between 

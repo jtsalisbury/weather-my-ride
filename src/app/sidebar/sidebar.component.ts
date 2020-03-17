@@ -17,7 +17,7 @@ export class SidebarComponent implements OnInit {
   locationSubscription: Subscription;
 
   locationService: LocationsService;
-  activeTravelMode: String;
+  activeTravelMode: String = 'DRIVING';
   travelModes = [
     {icon: 'directions_car', methodName: 'DRIVING'},
     {icon: 'directions_bike', methodName: 'BICYCLING'},

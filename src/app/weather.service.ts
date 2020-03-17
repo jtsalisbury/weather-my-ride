@@ -14,6 +14,19 @@ export class WeatherService {
 
   constructor(private http: HttpClient) {} 
 
+  private headerOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    })
+  }
+
+  getWeather(lat, lng, time) {
+    let proxy = "https://cors-anywhere.herokuapp.com/";
+    let result = this.http.get(proxy + `https://api.darksky.net/forecast/${environment.darkSkyApiKey}/${lat},${lng},${time}`, this.headerOptions).toPromise();
+    return result;
+  }
+
   // Method to handle setting directions
   setDirections(directions) {
     let legs = directions.routes[0].legs;
@@ -24,29 +37,31 @@ export class WeatherService {
     let now = Math.floor(Date.now() / 1000); //ms to s
     let totalTime = now;
 
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      })
-    }
+    // Weather for departure location
+    let results = [];
+    let result = this.getWeather(legs[0].start_location.lat(), legs[0].start_location.lng(), totalTime);
+    result.then(weatherData => {
+      // Add the weather data to the directions info
+      legs[0].departure_weather = weatherData;
+
+      // Get the URL corresponding to the icon
+      let iconURL = this.getIconURL(legs[0].departure_weather.currently.icon);
+      legs[0].departure_weather.currently.iconURL = iconURL;
+    })
+    results.push(result);
 
     // Grab the weather at the end of each leg
-    let results = [];
-    legs.forEach(async (leg, i) => {
+    legs.forEach(async (leg) => {
       totalTime += leg.duration.value;
 
-      // TODO: incorporate timezone conversion with duration
-      // Adding the time then converting should work to the target timezone
-      let proxy = "https://cors-anywhere.herokuapp.com/";
-      let result = this.http.get(proxy + `https://api.darksky.net/forecast/${environment.darkSkyApiKey}/${leg.end_location.lat()},${leg.end_location.lng()},${totalTime}`, options).toPromise();
+      let result = this.getWeather(leg.end_location.lat(), leg.end_location.lng(), totalTime);
       result.then(weatherData => {
         // Add the weather data to the directions info
-        directions.routes[0].legs[i].weatherData = weatherData;
+        leg.destination_weather = weatherData;
 
         // Get the URL corresponding to the icon
-        let iconURL = this.getIconURL(directions.routes[0].legs[i].weatherData.currently.icon);
-        directions.routes[0].legs[i].weatherData.currently.iconURL = iconURL;
+        let iconURL = this.getIconURL(leg.destination_weather.currently.icon);
+        leg.destination_weather.currently.iconURL = iconURL;
       })
 
       results.push(result);

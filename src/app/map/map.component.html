@@ -9,6 +9,10 @@
     </agm-direction>
     <agm-marker *ngFor="let i of markers"
       [latitude]="i.lat" [longitude]="i.lng" [iconUrl]="i.icn">
+      <agm-info-window>
+          <h3><strong>{{i.infoTitle}}</strong></h3>
+          <p>Time: {{i.infoTime}}<br />Conditions: {{i.infoConditions}}</p>
+        </agm-info-window>
     </agm-marker>
 </agm-map>
 
