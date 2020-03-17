@@ -13,6 +13,7 @@ export class MapComponent implements OnInit {
   @Input() locations: Array<PlaceResult>;
   weatherSubscription: Subscription;
   waypointSubscription: Subscription;
+  transportationMethodSubscription: Subscription;
 
   latitude = 37.77;
   longitude = -122.447;
@@ -34,6 +35,12 @@ export class MapComponent implements OnInit {
         this.updateLocations(waypoints);
       }
     )
+
+    this.transportationMethodSubscription = locationService.transportationMethodChanged$.subscribe(
+      method => {
+        this.setTransportationMethod(method);
+      }
+    )
   }
 
   ngOnInit() {
@@ -50,6 +57,7 @@ export class MapComponent implements OnInit {
     suppressMarkers: true
   }
 
+  public travelMode: String = "DRIVING";
   public origin: any;
   public destination: any;
   public waypoints: Array<Object>;
@@ -90,6 +98,10 @@ export class MapComponent implements OnInit {
       });
       
     }
+  }
+
+  setTransportationMethod(method) {
+    this.travelMode = method;
   }
 
   // Once the locations change

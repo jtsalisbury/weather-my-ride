@@ -6,6 +6,10 @@
   position: absolute;
 }
 
+button.active {
+  background-color: #e1e1e1;
+}
+
 .fullwidth {
   width: 100%;
 }

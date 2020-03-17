@@ -19,10 +19,10 @@ export class WeatherService {
     let legs = directions.routes[0].legs;
 
     // Get the time
+    // Convert our time to GMT, then we can add the offset as a total duration
+    //   and make a time request with GMT
     let now = Math.floor(Date.now() / 1000); //ms to s
-    let totalDuration = 0;
     let totalTime = now;
-    let oldTimeZone;
 
     const options = {
       headers: new HttpHeaders({

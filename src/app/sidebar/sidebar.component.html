@@ -1,4 +1,8 @@
 <mat-card class="card">
+    <button [ngClass]="activeTravelMode == entry.methodName ? 'active' : ''" *ngFor="let entry of travelModes" (click)="changeTransportationMethod(entry.methodName)" mat-icon-button>
+      <mat-icon>{{entry.icon}}</mat-icon>
+    </button>
+
     <mat-card-content class="content">
     
     <div class="address-list" cdkDropList (cdkDropListDropped)="drop($event)">

@@ -21,6 +21,10 @@ export class LocationsService {
   waypointSources = new Subject<Array<Object>>();
   waypointsChanged$ = this.waypointSources.asObservable();
 
+  // Observable for the transportation method
+  transportationSource = new Subject<String>();
+  transportationMethodChanged$ = this.transportationSource.asObservable();
+
   constructor() {
   }
 
@@ -94,5 +98,9 @@ export class LocationsService {
     moveItemInArray(this.locations, prevIndex, newIndex);
 
     this.publishLocations();
+  }
+
+  setTransportationMethod(method) {
+    this.transportationSource.next(method);
   }
 }

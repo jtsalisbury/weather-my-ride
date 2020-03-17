@@ -17,6 +17,13 @@ export class SidebarComponent implements OnInit {
   locationSubscription: Subscription;
 
   locationService: LocationsService;
+  activeTravelMode: String;
+  travelModes = [
+    {icon: 'directions_car', methodName: 'DRIVING'},
+    {icon: 'directions_bike', methodName: 'BICYCLING'},
+    {icon: 'directions_bus', methodName: 'TRANSIT'},
+    {icon: 'directions_walking', methodName: 'WALKING'},
+  ];
 
   ngOnInit(): void {
 
@@ -64,4 +71,8 @@ export class SidebarComponent implements OnInit {
     this.locationService.removeLocationSource(id);
   }
 
+  changeTransportationMethod(newMethod) {
+    this.locationService.setTransportationMethod(newMethod);
+    this.activeTravelMode = newMethod;
+  }
 }
