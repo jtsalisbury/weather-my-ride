@@ -33,7 +33,7 @@
     "agm-direction": "^0.7.9",
     "dotenv": "^5.0.1",
     "express": "^4.17.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "mime": "^2.4.4",
     "mime-db": "^1.43.0",
     "path": "^0.12.7",
