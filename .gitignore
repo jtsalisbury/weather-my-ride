@@ -5,6 +5,7 @@
 /integration/bazel/bazel-*
 *.log
 node_modules
+.history
 
 # Include when developing application packages.
 pubspec.lock

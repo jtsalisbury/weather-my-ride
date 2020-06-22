@@ -21,9 +21,13 @@ export class LocationsService {
   waypointSources = new Subject<Array<Object>>();
   waypointsChanged$ = this.waypointSources.asObservable();
 
+  waypointsActual: Array<Object> = [];
+
   // Observable for the transportation method
   transportationSource = new Subject<String>();
   transportationMethodChanged$ = this.transportationSource.asObservable();
+
+  travelModeActual: String = 'DRIVING';
 
   constructor() {
   }
@@ -49,6 +53,8 @@ export class LocationsService {
     if (this.locations.length !== waypoints.length) {
       return;
     }
+    
+    this.waypointsActual = waypoints;
 
     this.waypointSources.next(waypoints);
   }
@@ -102,5 +108,32 @@ export class LocationsService {
 
   setTransportationMethod(method) {
     this.transportationSource.next(method);
+
+    this.travelModeActual = method;
+  }
+
+  // Construct a string for the Google Navigation API
+  getNavigationString() {
+    let baseUrl = 'https://www.google.com/maps/dir/?api=1';
+
+    if (this.waypointsActual.length < 2) {
+      return;
+    }
+
+    let origin = this.waypointsActual[0]['formatted_address'];
+    let destination = this.waypointsActual[this.waypointsActual.length - 1]['formatted_address'];
+
+    origin = encodeURIComponent(origin);
+    destination = encodeURIComponent(destination);
+
+    let waypoints = '';
+    for (let i = 1; i < this.waypointsActual.length - 1; i++) {
+      let waypoint = this.waypointsActual[i];
+
+      waypoints += `|${waypoint['formatted_address']}`;
+    }
+    waypoints = encodeURIComponent(waypoints.substr(1, waypoints.length));
+
+    return `${baseUrl}&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelMode=${this.travelModeActual}`;
   }
 }

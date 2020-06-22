@@ -3,6 +3,10 @@
       <mat-icon>{{entry.icon}}</mat-icon>
     </button>
 
+    <button [ngClass]="" (click)="openNavigation()" mat-icon-button>
+      <mat-icon>navigation</mat-icon>
+    </button>
+
     <mat-card-content class="content">
     
     <div class="address-list" cdkDropList (cdkDropListDropped)="drop($event)">

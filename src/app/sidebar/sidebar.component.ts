@@ -75,4 +75,12 @@ export class SidebarComponent implements OnInit {
     this.locationService.setTransportationMethod(newMethod);
     this.activeTravelMode = newMethod;
   }
+  
+  openNavigation() {
+    let url = this.locationService.getNavigationString();
+
+    if (url && url.length > 0) {
+      window.open(url, '_blank');
+    }
+  }
 }
