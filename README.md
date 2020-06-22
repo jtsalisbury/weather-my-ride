@@ -1,6 +1,6 @@
 # WeatherMyRoute
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.4.
+Built using Angular and the Google Maps API, this app allows you to view weather along a route. 
 
 ## Development server
 
