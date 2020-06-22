@@ -1,6 +1,6 @@
 # WeatherMyRoute
 
-Built using Angular and the Google Maps API, this app allows you to view weather along a route. View live demo (https://weather-my-route.herokuapp.com/)[here] 
+Built using Angular and the Google Maps API, this app allows you to view weather along a route. View live demo [here](https://weather-my-route.herokuapp.com/) 
 
 ## Development server
 
