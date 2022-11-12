@@ -22,8 +22,7 @@ export class WeatherService {
   }
 
   getWeather(lat, lng, time) {
-    let proxy = "https://cors-anywhere.herokuapp.com/";
-    let result = this.http.get(proxy + `https://api.darksky.net/forecast/${environment.darkSkyApiKey}/${lat},${lng},${time}`, this.headerOptions).toPromise();
+    let result = this.http.get(`./forecast?details=${lat},${lng},${time}`, this.headerOptions).toPromise();
     return result;
   }
 
